@@ -1,6 +1,7 @@
 package ru.yandex.dunaev.mick.myviewmodel.recycler;
 
 import java.util.List;
+import java.util.UUID;
 
 import androidx.recyclerview.widget.DiffUtil;
 import ru.yandex.dunaev.mick.myviewmodel.model.Model;
@@ -29,12 +30,10 @@ public class ModelDiffUtilCallback extends DiffUtil.Callback {
         Model newModel = newList.get(newItemPosition);
         Model oldModel = oldList.get(oldItemPosition);
 
-        String newText = newModel.editText.get();
-        String oldText = oldModel.editText.get();
+        UUID newId = newModel.uuid.get();
+        UUID oldId = oldModel.uuid.get();
 
-        if(oldText == null || newText == null) return false;
-
-        return newText.equals(oldText);
+        return oldId.equals(newId);
     }
 
     @Override
@@ -44,8 +43,6 @@ public class ModelDiffUtilCallback extends DiffUtil.Callback {
 
         String newText = newModel.editText.get();
         String oldText = oldModel.editText.get();
-
-        if(oldText == null || newText == null) return false;
 
         return newText.equals(oldText);
     }

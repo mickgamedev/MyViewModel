@@ -22,6 +22,10 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelHolder> {
         this.models.addAll(models);
     }
 
+    public List<Model> getModels(){
+        return models;
+    }
+
     @NonNull
     @Override
     public ModelHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

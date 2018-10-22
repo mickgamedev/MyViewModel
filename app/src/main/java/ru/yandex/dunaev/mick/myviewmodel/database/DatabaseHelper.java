@@ -1,22 +1,22 @@
 package ru.yandex.dunaev.mick.myviewmodel.database;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import androidx.databinding.ObservableField;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.room.Room;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ru.yandex.dunaev.mick.myviewmodel.model.Model;
-import ru.yandex.dunaev.mick.myviewmodel.recycler.ModelData;
+import ru.yandex.dunaev.mick.myviewmodel.model.ModelData;
+import ru.yandex.dunaev.mick.myviewmodel.model.ModelDb;
 import ru.yandex.dunaev.mick.myviewmodel.recycler.ModelDiffUtilCallback;
 
 public class DatabaseHelper {
@@ -30,13 +30,22 @@ public class DatabaseHelper {
     }
 
     public static void insert(Model model) {
-        Completable.fromCallable(() -> insertAsync(model)).subscribeOn(Schedulers.io()).subscribe();
+        ModelDb modelDb = new ModelDb(model);
+        Completable.fromCallable(() -> insertAsync(modelDb)).subscribeOn(Schedulers.io()).subscribe();
     }
 
-    private static Void insertAsync(Model model) {
-        ModelDb modelDb = new ModelDb();
-        modelDb.text = model.editText.get();
+    private static Void insertAsync(ModelDb modelDb) {
         db.modelDao().insetModel(modelDb);
+        return null;
+    }
+
+    public static void delete(Model model){
+        ModelDb modelDb = new ModelDb(model);
+        Completable.fromCallable(() -> deleteAsync(modelDb.uuid)).subscribeOn(Schedulers.io()).subscribe();
+    }
+
+    private static Void deleteAsync(UUID uuid){
+        db.modelDao().deleteModel(uuid);
         return null;
     }
 
